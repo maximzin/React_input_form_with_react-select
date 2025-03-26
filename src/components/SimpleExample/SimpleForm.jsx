@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import InputFormLine from './InputFormLine'
 
-const Form = () => {
+const SimpleForm = () => {
   const [inputForm, setInputForm] = useState({
     name: undefined,
     city: undefined,
@@ -31,7 +31,9 @@ const Form = () => {
   console.log(inputForm)
 
   return (
-    <>
+    <div>
+      <h4>Simple example</h4>
+
       <InputFormLine
         label={'Name'}
         name={'name'}
@@ -53,8 +55,8 @@ const Form = () => {
         inputForm={inputForm}
         setInputForm={setInputForm}
       />
-    </>
+    </div>
   )
 }
 
-export default Form
+export default SimpleForm
