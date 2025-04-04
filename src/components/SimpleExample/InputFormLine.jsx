@@ -1,25 +1,43 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Select from 'react-select'
 
-const InputFormLine = ({ name, data, inputForm, setInputForm }) => {
-  let options = []
+const InputFormLine = ({ name, data, value, handleChange }) => {
+  const [options, setOptions] = useState([])
+  const [formValue, setFormValue] = useState([])
 
-  if (name === 'name') {
-    data.map((row) => {
-      options.push({ name: 'name', label: row.name, value: row.id })
-    })
-  }
+  useEffect(() => {
+    const fetchData = async () => {
+      await getOptions()
+    }
+    fetchData()
+  }, [data])
 
-  if (name === 'city') {
-    data.map((row) => {
-      options.push({ name: 'city', label: row.name, value: row.id })
-    })
-  }
+  const getOptions = async () => {
+    let tempOptions = []
 
-  if (name === 'workStatus') {
-    data.map((row) => {
-      options.push({ name: 'workStatus', label: row.status, value: row.id })
-    })
+    if (name === 'name') {
+      data.map((row) => {
+        tempOptions.push({ name: 'name', label: row.name, value: row.id })
+      })
+    }
+
+    if (name === 'city') {
+      data.map((row) => {
+        tempOptions.push({ name: 'city', label: row.name, value: row.id })
+      })
+    }
+
+    if (name === 'workStatus') {
+      data.map((row) => {
+        tempOptions.push({
+          name: 'workStatus',
+          label: row.status,
+          value: row.id,
+        })
+      })
+    }
+
+    setOptions(tempOptions)
   }
 
   const customStyles = {
@@ -59,18 +77,24 @@ const InputFormLine = ({ name, data, inputForm, setInputForm }) => {
     }),
   }
 
+  useEffect(() => {
+    let option = options.find((option) => option.value === value)
+    if (option) {
+      setFormValue(option)
+    } else {
+      setFormValue({ label: '', name: name, value: undefined })
+    }
+  }, [value])
+
   return (
     <Select
       placeholder={'Select!'}
       isSearchable
       isClearable
       options={options}
+      value={formValue}
       onChange={(e) => {
-        if (e !== null) {
-          setInputForm({ ...inputForm, [name]: e.value })
-        } else {
-          setInputForm({ ...inputForm, [name]: undefined })
-        }
+        handleChange(e, name)
       }}
       unstyled
       styles={customStyles}
